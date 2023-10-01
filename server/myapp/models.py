@@ -58,12 +58,10 @@ class HeroPower(db.Model, SerializerMixin):
     def __repr__(self):
         return f" {self.hero_id} {self.power_id} {self.strength} "
 
-
-# Validations for strength attribute
-    @validates('strength')
+    # Validations for strength attribute
+    @validates("strength")
     def validate_strength(self, key, strength):
         if not isinstance(strength, int):
             raise ValueError("Strength must be a whole number")
         else:
             return strength
-
