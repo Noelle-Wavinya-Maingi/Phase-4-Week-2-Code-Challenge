@@ -5,9 +5,15 @@ function Home() {
   const [heros, setHeros] = useState([]);
 
   useEffect(() => {
-    fetch("/heroes")
-      .then((r) => r.json())
-      .then(setHeros);
+    fetch("/api/heroes")
+      .then((res) => res.json())
+      .then((responseData) => {
+        console.log(responseData);
+        setHeros(responseData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
 
   return (
