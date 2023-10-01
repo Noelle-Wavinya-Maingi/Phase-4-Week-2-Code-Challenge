@@ -36,7 +36,7 @@ function PowerById() {
   if (status === "rejected") return <h1>Error: {error}</h1>;
 
   // Check if hero is available before rendering hero details
-  if (!hero) return null;
+  if (!power) return null;
 
   return (
     <section>

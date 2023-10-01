@@ -19,6 +19,7 @@ function App() {
           <Route path="/powers/:id/edit" element={<PowerEditForm />} />
           <Route path="/powers" element={<Power />} />
           <Route path="/heroes/:id" element={<Hero />} />
+          <Route path="/powers/:id" element={<PowerById />} />
         </Routes>
       </main>
     </div>
