@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Power() {
   const [powers, setPowers] = useState([]);
@@ -24,9 +24,17 @@ function Power() {
           <li key={power.id}>
             <h3>{power.name}</h3>
             <p>{power.description}</p>
+            <p>
+        <Link to={`/powers/${powers.id}/edit`}>Edit Power Description</Link>
+      </p>
           </li>
+
         ))}
       </ul>
+      <p>
+        <Link to="/hero_powers/new">Add Hero Power</Link>
+      </p>
+      
     </section>
   );
 }
