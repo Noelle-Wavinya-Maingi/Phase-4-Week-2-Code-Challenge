@@ -13,6 +13,9 @@ class Hero(db.Model, SerializerMixin):
     # Serialization rules
     serialize_rules = ("-powers.heroes_powers",)
 
+    def __repr__(self):
+        return f"Hero {self.name}"
+
 
 class Power(db.Model, SerializerMixin):
     __tablename__ = "powers"
@@ -24,6 +27,9 @@ class Power(db.Model, SerializerMixin):
 
     # Serialization rules
     serialize_rules = ("-heroes.powers",)
+
+    def __repr__(self):
+        return f"Power {self.name}"
 
 
 class HeroPower(db.Model, SerializerMixin):
@@ -38,3 +44,6 @@ class HeroPower(db.Model, SerializerMixin):
 
     # Serialization rules
     serialize_rules = ("-hero.powers", "-power.heroes")
+
+    def __repr__(self):
+        return f" {self.hero_id} {self.power_id} {self.strength} "
