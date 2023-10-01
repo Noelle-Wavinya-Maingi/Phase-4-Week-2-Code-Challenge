@@ -8,16 +8,18 @@ function HeroPowerForm() {
   const [powerId, setPowerId] = useState("");
   const [strength, setStrength] = useState("");
   const [formErrors, setFormErrors] = useState([]);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/heroes")
+    fetch("/api/heroes")
       .then((r) => r.json())
-      .then(setHeroes);
+      .then((data) => {
+        setHeroes(data);
+      });
   }, []);
 
   useEffect(() => {
-    fetch("/powers")
+    fetch("/api/powers")
       .then((r) => r.json())
       .then(setPowers);
   }, []);
@@ -29,7 +31,7 @@ function HeroPowerForm() {
       power_id: powerId,
       strength,
     };
-    fetch("/hero_powers", {
+    fetch("/api/hero_powers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +39,7 @@ function HeroPowerForm() {
       body: JSON.stringify(formData),
     }).then((r) => {
       if (r.ok) {
-        history.push(`/heroes/${heroId}`);
+        navigate(`/api/heroes/${heroId}`);
       } else {
         r.json().then((err) => setFormErrors(err.errors));
       }
@@ -82,13 +84,15 @@ function HeroPowerForm() {
         value={strength}
         onChange={(e) => setStrength(e.target.value)}
       />
-      {formErrors.length > 0
-        ? formErrors.map((err) => (
-            <p key={err} style={{ color: "red" }}>
-              {err}
-            </p>
-          ))
-        : null}
+      <div> {/* Wrap form errors in a container element */}
+        {formErrors.length > 0
+          ? formErrors.map((err) => (
+              <p key={err} style={{ color: "red" }}>
+                {err}
+              </p>
+            ))
+          : null}
+      </div>
       <button type="submit">Add Hero Power</button>
     </form>
   );

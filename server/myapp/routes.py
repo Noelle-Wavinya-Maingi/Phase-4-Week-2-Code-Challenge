@@ -1,7 +1,7 @@
 from flask import make_response, jsonify, request
 from myapp import api, db
 from flask_restful import Resource
-from myapp.models import Hero, Power
+from myapp.models import Hero, Power, HeroPower
 
 class Heroes(Resource):
     def get(self):
@@ -97,8 +97,64 @@ class PowersByID(Resource):
                 error_message = str(e)
                 return make_response(jsonify({"error": error_message}), 500)
 
+class HerosPower(Resource):
+    def get(self):
+
+         try:
+            heropower = HeroPower.query.all()
+
+            powers_list = [power.to_dict() for power in heropower]
+
+            response = make_response(jsonify(powers_list), 200)
+
+            return response
+        
+         except Exception as e:
+            error_message = str(e)
+            return make_response(jsonify({"error": error_message}), 500)
+         
+    def post(self):
+        try:
+            data = request.get_json()
+
+            strength = data.get("strength")
+            power_id = data.get("power_id")
+            hero_id = data.get("hero_id")
+
+            if not strength or not power_id or not hero_id:
+                return {"errors": ["validation errors"]}, 400
+            
+            power = Power.query.get(power_id)
+            hero = Hero.query.get(hero_id)
+
+            if not power or not hero:
+                return {"errors": ["Power or Hero not found"]}, 404
+            
+            hero_power = HeroPower(strength = strength, power_id = power_id, hero_id = hero_id)
+
+            db.session.add(hero_power)
+            db.session.commit()
+
+            hero_data = {
+                "id": hero.id,
+                "name": hero.name,
+                "powers":[
+                    {
+                        "id": power.id,
+                        "name": power.name,
+                        "description": power.description,
+                    }
+                ],
+            }
+
+            return hero_data, 201
+        
+        except Exception as e:
+            error_message = str(e)
+            return make_response(jsonify({"error": error_message}), 500)
     
 api.add_resource(Heroes, '/heroes')
 api.add_resource(HeroesByID, '/heroes/<int:id>')
 api.add_resource(Powers, '/powers')
 api.add_resource(PowersByID, '/powers/<int:id>')
+api.add_resource(HerosPower, '/hero_powers')
