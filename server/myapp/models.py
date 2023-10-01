@@ -1,6 +1,5 @@
 from myapp import db
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
 
 
 class Hero(db.Model, SerializerMixin):
@@ -9,10 +8,10 @@ class Hero(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
 
-    hero_powers = db.relationship("HeroPower", back_populates="hero")
+    # powers = db.relationship("Power", secondary="hero_powers", backref="heroes_powers")
 
     # Serialization rules
-    serialize_rules = ("-hero_powers.hero", "-hero_powers.power.hero_powers")
+    serialize_rules = ("-powers.heroes_powers",)
 
 
 class Power(db.Model, SerializerMixin):
@@ -21,10 +20,10 @@ class Power(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
 
-    hero_powers = db.relationship("HeroPower", back_populates="power")
+    # heroes = db.relationship("Hero", secondary="hero_powers", back_populates="powers")
 
     # Serialization rules
-    serialize_rules = ("-hero_powers.power", "-hero_powers.hero")
+    serialize_rules = ("-heroes.powers",)
 
 
 class HeroPower(db.Model, SerializerMixin):
@@ -32,11 +31,10 @@ class HeroPower(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     hero_id = db.Column(db.Integer, db.ForeignKey("heroes.id"), nullable=False)
+    hero = db.relationship("Hero", backref=db.backref("hero_powers", lazy=True))
     power_id = db.Column(db.Integer, db.ForeignKey("powers.id"), nullable=False)
+    power = db.relationship("Power", backref=db.backref("hero_powers", lazy=True))
     strength = db.Column(db.Integer, nullable=False)
 
-    hero = db.relationship("Hero", back_populates="hero_powers")
-    power = db.relationship("Power", back_populates="hero_powers")
-
     # Serialization rules
-    serialize_rules = ("-hero.hero_powers", "-power.hero_powers")
+    serialize_rules = ("-hero.powers", "-power.heroes")

@@ -1,8 +1,8 @@
-"""Create Hero, Power and HeroPower models.
+"""Create the Hero, Power and HeroPower models.
 
-Revision ID: 6712e52c7d93
+Revision ID: 3d58c03499d7
 Revises: 
-Create Date: 2023-10-01 11:42:28.930394
+Create Date: 2023-10-01 18:32:41.820198
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6712e52c7d93'
+revision = '3d58c03499d7'
 down_revision = None
 branch_labels = None
 depends_on = None
