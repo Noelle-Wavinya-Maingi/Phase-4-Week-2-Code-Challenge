@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 function PowerEditForm() {
   const [{ data: power, errors, status }, setPower] = useState({
@@ -8,29 +8,31 @@ function PowerEditForm() {
     status: "pending",
   });
   const [description, setDescription] = useState("");
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`/powers/${id}`).then((r) => {
-      if (r.ok) {
-        r.json().then((power) => {
-          setPower({ data: power, errors: [], status: "resolved" });
-          setDescription(power.description);
-        });
-      } else {
-        r.json().then((err) =>
-          setPower({ data: null, errors: [err.error], status: "rejected" })
-        );
-      }
-    });
+    fetch(`/api/powers/${id}`)
+      .then((r) => {
+        if (r.ok) {
+          r.json().then((power) => {
+            setPower({ data: power, errors: [], status: "resolved" });
+            setDescription(power.description);
+          });
+        } else {
+          r.json().then((err) =>
+            setPower({ data: null, errors: [err.error], status: "rejected" })
+          );
+        }
+      });
   }, [id]);
 
   if (status === "pending") return <h1>Loading...</h1>;
+  if (!power) return <h1>Power not found</h1>; 
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetch(`/powers/${power.id}`, {
+    fetch(`/api/powers/${power.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +42,7 @@ function PowerEditForm() {
       }),
     }).then((r) => {
       if (r.ok) {
-        history.push(`/powers/${power.id}`);
+        navigate(`/api/powers/${power.id}`);
       } else {
         r.json().then((err) =>
           setPower({ data: power, errors: err.errors, status: "rejected" })

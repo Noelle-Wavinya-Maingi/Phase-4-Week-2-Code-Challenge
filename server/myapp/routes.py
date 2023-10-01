@@ -1,5 +1,5 @@
-from flask import make_response, jsonify
-from myapp import api
+from flask import make_response, jsonify, request
+from myapp import api, db
 from flask_restful import Resource
 from myapp.models import Hero, Power
 
@@ -73,7 +73,29 @@ class PowersByID(Resource):
             error_message = str(e)
             return make_response(jsonify({"error": error_message}), 500)
         
+    def patch(self, id):
+            try:
+                power = Power.query.get(id)
 
+                if not power:
+                    return {"error": "Power not found"}, 404
+
+                data = request.get_json()  
+
+                if "name" in data:
+                    power.name = data["name"]
+
+                if "description" in data:
+                    power.description = data["description"]
+
+                db.session.commit()
+
+                response = make_response(power.to_dict(), 200)
+                return response
+               
+            except Exception as e:
+                error_message = str(e)
+                return make_response(jsonify({"error": error_message}), 500)
 
     
 api.add_resource(Heroes, '/heroes')

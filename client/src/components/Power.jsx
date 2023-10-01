@@ -25,7 +25,7 @@ function Power() {
             <h3>{power.name}</h3>
             <p>{power.description}</p>
             <p>
-        <Link to={`/powers/${powers.id}/edit`}>Edit Power Description</Link>
+        <Link to={`/powers/${power.id}/edit`}>Edit Power Description</Link>
       </p>
           </li>
 
