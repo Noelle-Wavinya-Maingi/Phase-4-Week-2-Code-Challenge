@@ -1,8 +1,8 @@
-"""Create the models.
+"""Created the Hero,Power and HeroPower models.
 
-Revision ID: d5b097664d92
+Revision ID: fc2ceba0b1c4
 Revises: 
-Create Date: 2023-10-01 19:11:20.341726
+Create Date: 2023-10-01 22:13:06.766970
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd5b097664d92'
+revision = 'fc2ceba0b1c4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,13 +21,19 @@ def upgrade():
     op.create_table('heroes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('super_name', sa.String(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('name'),
+    sa.UniqueConstraint('super_name')
     )
     op.create_table('powers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
@@ -36,6 +42,8 @@ def upgrade():
     sa.Column('hero_id', sa.Integer(), nullable=False),
     sa.Column('power_id', sa.Integer(), nullable=False),
     sa.Column('strength', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['hero_id'], ['heroes.id'], ),
     sa.ForeignKeyConstraint(['power_id'], ['powers.id'], ),
     sa.PrimaryKeyConstraint('id')
