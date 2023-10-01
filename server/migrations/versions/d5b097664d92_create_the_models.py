@@ -1,8 +1,8 @@
-"""Create the Hero, Power and HeroPower models.
+"""Create the models.
 
-Revision ID: 3d58c03499d7
+Revision ID: d5b097664d92
 Revises: 
-Create Date: 2023-10-01 18:32:41.820198
+Create Date: 2023-10-01 19:11:20.341726
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3d58c03499d7'
+revision = 'd5b097664d92'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,7 @@ def upgrade():
     op.create_table('powers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('description', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )

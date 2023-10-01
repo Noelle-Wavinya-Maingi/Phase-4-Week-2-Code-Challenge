@@ -2,6 +2,10 @@ from myapp import app, db
 from myapp.models import Hero, Power, HeroPower
 
 with app.app_context():
+    db.session.query(Hero).delete()
+    db.session.query(Power).delete()
+    db.session.query(HeroPower).delete()
+
     hero1 = Hero(name="Superman")
     hero2 = Hero(name="Batman")
     hero3 = Hero(name="Wonder Woman")
@@ -10,11 +14,13 @@ with app.app_context():
 
     print("Heroes seeded successfully")
 
-    power1 = Power(name="Flight")
-    power2 = Power(name="Super Strength")
-    power3 = Power(name="Invisibility")
-    power4 = Power(name="Speed")
-    power5 = Power(name="Telepathy")
+    power1 = Power(name="Flight", description="Allows the hero to fly")
+    power2 = Power(name="Super Strength", description="Provides superhuman strength")
+    power3 = Power(
+        name="Invisibility", description="Allows the hero to become invisible"
+    )
+    power4 = Power(name="Speed", description="Grants super speed")
+    power5 = Power(name="Telepathy", description="Allows mind communication")
 
     print("Powers seeded successfully")
 

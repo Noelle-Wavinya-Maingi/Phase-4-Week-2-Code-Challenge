@@ -1,5 +1,6 @@
 from myapp import db
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.orm import validates
 
 
 class Hero(db.Model, SerializerMixin):
@@ -22,6 +23,7 @@ class Power(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
+    description = db.Column(db.String, nullable=False)
 
     # heroes = db.relationship("Hero", secondary="hero_powers", back_populates="powers")
 
@@ -30,6 +32,14 @@ class Power(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"Power {self.name}"
+
+    # Validations for description attribute
+    @validates("description")
+    def validate_description(self, key, description):
+        if len(description) > 250:
+            raise ValueError("Description must be less than 250 characters")
+        else:
+            return description
 
 
 class HeroPower(db.Model, SerializerMixin):
@@ -47,3 +57,13 @@ class HeroPower(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f" {self.hero_id} {self.power_id} {self.strength} "
+
+
+# Validations for strength attribute
+    @validates('strength')
+    def validate_strength(self, key, strength):
+        if not isinstance(strength, int):
+            raise ValueError("Strength must be a whole number")
+        else:
+            return strength
+
