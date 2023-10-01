@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import HeroPowerForm from "./components/HeroPowerForm";
 import Power from "./components/Power";
 import PowerEditForm from "./components/PowerEditForm";
+import PowerById from "./components/PowerById";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/hero_powers/new" element={<HeroPowerForm />} />
           <Route path="/powers/:id/edit" element={<PowerEditForm />} />
-          <Route path="/powers/:id" element={<Power />} />
+          <Route path="/powers" element={<Power />} />
           <Route path="/heroes/:id" element={<Hero />} />
         </Routes>
       </main>

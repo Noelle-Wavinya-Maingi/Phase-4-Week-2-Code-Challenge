@@ -1,7 +1,7 @@
 from flask import make_response, jsonify
 from myapp import api
 from flask_restful import Resource
-from myapp.models import Hero
+from myapp.models import Hero, Power
 
 class Heroes(Resource):
     def get(self):
@@ -37,7 +37,25 @@ class HeroesByID(Resource):
         except Exception as e:
             error_message = str(e)
             return make_response(jsonify({"error": error_message}), 500)
+        
+class Powers(Resource):
+    def get(self):
+
+         try:
+            powers = Power.query.all()
+
+            powers_list = [power.to_dict() for power in powers]
+
+            response = make_response(jsonify(powers_list), 200)
+
+            return response
+        
+         except Exception as e:
+            error_message = str(e)
+            return make_response(jsonify({"error": error_message}), 500)
+
 
     
 api.add_resource(Heroes, '/heroes')
 api.add_resource(HeroesByID, '/heroes/<int:id>')
+api.add_resource(Powers, '/powers')
