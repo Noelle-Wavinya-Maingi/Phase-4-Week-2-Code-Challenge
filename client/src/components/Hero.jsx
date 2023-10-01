@@ -1,30 +1,42 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 function Hero() {
-  const [{ data: hero, error, status }, setHero] = useState({
-    data: null,
-    error: null,
-    status: "pending",
-  });
+  const [hero, setHero] = useState(null);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState("pending");
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`/heroes/${id}`).then((r) => {
-      if (r.ok) {
-        r.json().then((hero) =>
-          setHero({ data: hero, error: null, status: "resolved" })
-        );
-      } else {
-        r.json().then((err) =>
-          setHero({ data: null, error: err.error, status: "rejected" })
-        );
-      }
-    });
+    fetch(`/api/heroes/${id}`)
+      .then((r) => {
+        if (r.ok) {
+          r.json().then((hero) => {
+            setHero(hero);
+            setError(null);
+            setStatus("resolved");
+          });
+        } else {
+          r.json().then((err) => {
+            setHero(null);
+            setError(err.error);
+            setStatus("rejected");
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setHero(null);
+        setError("Network Error");
+        setStatus("rejected");
+      });
   }, [id]);
 
   if (status === "pending") return <h1>Loading...</h1>;
-  if (status === "rejected") return <h1>Error: {error.error}</h1>;
+  if (status === "rejected") return <h1>Error: {error}</h1>;
+
+  // Check if hero is available before rendering hero details
+  if (!hero) return null;
 
   return (
     <section>
@@ -33,9 +45,10 @@ function Hero() {
 
       <h3>Powers:</h3>
       <ul>
-        {hero.powers.map((power) => (
-          <li key={hero.id}>
-            <Link to={`/powers/${power.id}`}>{power.name}</Link>
+      {hero.hero_powers.map((heroPower) => (
+          <li key={heroPower.id}>
+            Name: {heroPower.power.name}<br></br>
+            Strength: {heroPower.strength}
           </li>
         ))}
       </ul>
