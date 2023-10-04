@@ -1,7 +1,12 @@
 from flask import make_response, jsonify, request, render_template
-from myapp import api, db
+from myapp import api, db, app
 from flask_restful import Resource
 from myapp.models import Hero, Power, HeroPower
+
+
+@app.route("/")
+def home():
+    return  render_template("index.html")
 
 class Heroes(Resource):
     def get(self):
@@ -11,9 +16,10 @@ class Heroes(Resource):
 
             heroes_list = [hero.to_dict() for hero in heroes]
 
-            # response = make_response(jsonify(heroes_list), 200)
+            response = make_response(jsonify(heroes_list), 200)
 
-            return render_template("index.html", heroes = heroes_list)
+            # return render_template("in")
+            return response
         
         except Exception as e:
             error_message = str(e)
