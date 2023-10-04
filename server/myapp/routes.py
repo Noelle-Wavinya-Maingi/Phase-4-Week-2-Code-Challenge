@@ -1,4 +1,4 @@
-from flask import make_response, jsonify, request
+from flask import make_response, jsonify, request, render_template
 from myapp import api, db
 from flask_restful import Resource
 from myapp.models import Hero, Power, HeroPower
@@ -11,9 +11,9 @@ class Heroes(Resource):
 
             heroes_list = [hero.to_dict() for hero in heroes]
 
-            response = make_response(jsonify(heroes_list), 200)
+            # response = make_response(jsonify(heroes_list), 200)
 
-            return response
+            return render_template("index.html", heroes = heroes_list)
         
         except Exception as e:
             error_message = str(e)
@@ -26,7 +26,7 @@ class HeroesByID(Resource):
             hero = Hero.query.filter_by(id = id).first()
 
             if hero:
-                response = make_response(hero.to_dict(), 200)
+                return render_template("index.html", hero = hero.to_dict())
             
             else:
                 response_dict = {"error": "Hero not found"}
@@ -46,9 +46,7 @@ class Powers(Resource):
 
             powers_list = [power.to_dict() for power in powers]
 
-            response = make_response(jsonify(powers_list), 200)
-
-            return response
+            return render_template("index.html", powers = powers_list)
         
          except Exception as e:
             error_message = str(e)
@@ -61,7 +59,7 @@ class PowersByID(Resource):
             power = Power.query.filter_by(id = id).first()
 
             if power:
-                response = make_response(power.to_dict(), 200)
+                return render_template("index.html", power = power.to_dict())
             
             else:
                 response_dict = {"error": "Power not found"}
@@ -105,9 +103,8 @@ class HerosPower(Resource):
 
             powers_list = [power.to_dict() for power in heropower]
 
-            response = make_response(jsonify(powers_list), 200)
+            return render_template("index.html", powers = powers_list)
 
-            return response
         
          except Exception as e:
             error_message = str(e)
